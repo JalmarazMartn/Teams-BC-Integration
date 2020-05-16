@@ -25,6 +25,10 @@ page 84000 "Notificable Teams"
                 {
                     ApplicationArea = All;
                 }
+                field("Teams Notification Area"; "Teams Notification Area")
+                {
+                    ApplicationArea = All;
+                }
             }
         }
         area(Factboxes)

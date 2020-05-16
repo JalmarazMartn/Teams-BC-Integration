@@ -17,8 +17,11 @@ table 84000 "Notificable Team"
         {
             DataClassification = ToBeClassified;
         }
+        field(4; "Teams Notification Area"; enum "Teams Notification Area")
+        {
+            DataClassification = ToBeClassified;
+        }
     }
-
     keys
     {
         key(PK; Code)

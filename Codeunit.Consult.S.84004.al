@@ -7,6 +7,16 @@ codeunit 84004 "Send And Receive Consult"
 
     procedure SendConsult()
     var
+        XMLResponse: XmlDocument;
+        XMLAgencyNumber: XmlNode;
+    begin
+        XMLResponse := GetSOPAServiceResponse();
+        if XMLResponse.SelectSingleNode(LocalName('NumeroAsiento'), XMLAgencyNumber) then
+            Message(XMLAgencyNumber.AsXmlElement().InnerXml);
+    end;
+
+    procedure GetSOPAServiceResponse() XMLResponse: XmlDocument;
+    var
         SOAPRequest: HttpRequestMessage;
         SOAPResponse: HttpResponseMessage;
         ReqSetup: Record "Request Setup";
@@ -24,7 +34,7 @@ codeunit 84004 "Send And Receive Consult"
         //if SOAPClient.Post(ReqSetup.Url, SOAPRequest.Content, SOAPResponse) then begin
         if SOAPClient.Send(SOAPRequest, SOAPResponse) then begin
             SOAPResponse.Content.ReadAs(TextResp);
-            Message(TextResp);
+            XmlDocument.ReadFrom(TextResp, XMLResponse);
         end;
     end;
 
@@ -57,7 +67,11 @@ codeunit 84004 "Send And Receive Consult"
         TempReq."Last Request".CreateInStream(InStream);
         TempReq.CalcFields("Last Request");
         InStream.Read(TextReq);
-        Message(TextReq);
         SoapRequest.Content.WriteFrom(TextReq);
+    end;
+
+    local procedure LocalName(NodeName: text[100]): Text;
+    begin
+        exit(StrSubstNo('//*[local-name()="%1"]', NodeName));
     end;
 }
